@@ -1,0 +1,9 @@
+﻿  /* Parallax base styles
+  --------------------------------------------- */
+
+  .parallax {
+      height: 500%; /* fallback for older browsers */
+      height: 100%;
+  }
+
+  

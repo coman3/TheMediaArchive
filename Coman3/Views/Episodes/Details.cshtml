@@ -1,0 +1,33 @@
+﻿@model Coman3.Models.Episode
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Episode</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Season.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Season.Name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    <a href="@Url.Action("Edit", "Series", new { id = Model.Season.Serie.Id })">Back To Serie</a>
+</p>

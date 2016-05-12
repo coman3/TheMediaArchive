@@ -1,0 +1,150 @@
+﻿@using Coman3.Models
+@model Tuple<IEnumerable<Coman3.Models.Serie>, Coman3.Models.SerieIndexBag>
+<tr>
+    @if (!Model.Item2.CompactMode)
+    {
+        <th>
+            Image
+        </th>
+    }
+    <th>
+        @if (Model.Item2.OrderBy == SortOption.Name)
+            {
+            <div>
+                Name
+                <a href="@Url.Action("Index", Model.Item2.ChangeValue(x=> x.Accending = !Model.Item2.Accending))">
+                    <i class="fa fa-fw @(Model.Item2.Accending ? "fa-sort-asc" : "fa-sort-desc")"></i>
+                </a>
+            </div>
+        }
+        else
+        {
+            <a href="@Url.Action("Index", Model.Item2.ChangeValue(x=> x.OrderBy = SortOption.Name))">
+                Name
+            </a>
+        }
+
+</th>
+    @if (Model.Item2.ShowShortDesc)
+    {
+        <th>
+            Short Description
+        </th>
+    }
+    @if (Model.Item2.EditMode)
+    {
+        <th>
+            @if (Model.Item2.OrderBy == SortOption.SeasonCount)
+            {
+                <div>
+                    Seasons
+                    <a href="@Url.Action("Index", Model.Item2.ChangeValue(x=> x.Accending = !Model.Item2.Accending))">
+                        <i class="fa fa-fw @(Model.Item2.Accending ? "fa-sort-asc" : "fa-sort-desc")"></i>
+                    </a>
+                </div>
+            }
+            else
+            {
+                <a href="@Url.Action("Index", Model.Item2.ChangeValue(x=> x.OrderBy = SortOption.SeasonCount))">
+                    Seasons
+                </a>
+            }
+        </th>
+        <th>
+            @if (Model.Item2.OrderBy == SortOption.EpisodeCount)
+            {
+                <div>
+                    Episodes
+                    <a href="@Url.Action("Index", Model.Item2.ChangeValue(x=> x.Accending = !Model.Item2.Accending))">
+                        <i class="fa fa-fw @(Model.Item2.Accending ? "fa-sort-asc" : "fa-sort-desc")"></i>
+                    </a>
+                </div>
+            }
+            else
+            {
+                <a href="@Url.Action("Index", Model.Item2.ChangeValue(x=> x.OrderBy = SortOption.EpisodeCount))">
+                    Episodes
+                </a>
+            }
+        </th>
+
+        <th style="-moz-min-width: 160px; -ms-min-width: 160px; -o-min-width: 160px; -webkit-min-width: 160px; min-width: 160px;">
+
+        </th>
+    }
+</tr>
+
+@if (Model.Item1 == null)
+{
+    <tr>
+        <td colspan="10">
+            No Items To Show :'(
+        </td>
+    </tr>
+}
+else
+{
+    foreach (var item in Model.Item1)
+    {
+        <tr>
+            @if (!Model.Item2.CompactMode)
+            {
+                <td>
+                    <img width="72" src="@(string.IsNullOrEmpty(item.ImageUrl) ? Url.Content("~/Content/Images/image.jpg") : item.ImageUrl)"/>
+                </td>
+            }
+            <td>
+                @Html.ActionLink(item.Name, "Details", new { id = item.Id })
+            </td>
+            @if (Model.Item2.ShowShortDesc)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShortDescription)
+                </td>
+            }
+
+            @if (Model.Item2.EditMode)
+            {
+                <td>
+                    @if (item.Seasons == null)
+                    {
+                        @Html.Raw(0)
+                    }
+                    else
+                    {
+                        @item.Seasons.Count
+                    }
+                </td>
+                <td>
+                    @if (item.Seasons == null)
+                    {
+                        @Html.Raw(0)
+                    }
+                    else
+                    {
+                        @item.Seasons.Sum(x => x.Episodes?.Count ?? 0)
+                    }
+                </td>
+                <td>
+                    @if (!Model.Item2.CompactMode)
+                    {
+                        <ul>
+                            <li class="list-unstyled" style="padding: 2px;">@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-xs btn-info btn-block" })</li>
+                            <li class="list-unstyled" style="padding: 2px;">@Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-xs btn-primary btn-block" })</li>
+                            <li class="list-unstyled" style="padding: 2px;">@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-xs btn-danger btn-block" })</li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="pull-right">
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-xs btn-info" })
+                            @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-xs btn-primary" })
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-xs btn-danger" })
+                        </div>
+                    }
+                </td>
+            }
+        </tr>
+    }
+}
+

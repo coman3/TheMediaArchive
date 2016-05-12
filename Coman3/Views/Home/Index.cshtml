@@ -1,0 +1,62 @@
+﻿@model List<Coman3.Models.Serie>
+@{
+    ViewBag.Title = "Home Page";
+    ViewBag.ActiveItem = "Home";
+}
+<div class="top-container">
+    <div style="font-family: RedMoonRising; font-size: 120px; width: 100%; text-align: center;">
+        Tv Archive
+    </div>
+    <form class="form-group" action="@Url.Action("Search", "Series")" method="get">
+        <div class="input-group automargin" style="max-width: 800px; padding: 10px;">
+            <input class="form-control" type="search" id="search" name="q" placeholder="Search"/>
+            <div class="input-group-btn">
+                <input type="submit" class="form-control btn btn-info" value="Search"/>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        @*@foreach (var serie in Model)
+        {
+            @Html.Partial("Partials/SeriePartial", serie)
+        }*@
+    </div>
+</div>
+@section scripts{
+    <script>
+        var autoComplete = $("#search").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    accepts: "application/json",
+                    dataType: "json",
+                    url: "/Api/Serie/" + request.term,
+                    success: function (result) {
+                        response(result);
+                    }
+                });
+            },
+            minLength: 3,
+            focus: function (event, ui) {
+                $("#search").val(ui.item.Title);
+                return false;
+            },
+            select: function (event, ui) {
+                window.location.href = "/Seires/Details/" + ui.item.Id;
+                return true;
+            },
+        });
+        autoComplete.autocomplete("instance")._renderItem = function (ul, item) {
+            return $("<li>")
+                .append("<table><tr>" +
+                    "<td style='padding: 0px 5px;'><img src='" + item.ThumbUrl + "' style='width: 64px;'></td>" +
+                    "<td>" +
+                    item.Title +
+                    "<p style='font-size: 12px; margin: 0;'>" + item.ShortDescripton + "</p>" +
+                    "</td>" +
+                    "</tr></table>")
+                .appendTo(ul);
+        };
+    </script>
+}

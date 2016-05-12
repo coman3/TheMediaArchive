@@ -1,0 +1,110 @@
+﻿@using Coman3.Models
+@using PagedList
+@using PagedList.Mvc
+@model SerieIndexViewModel
+@{
+    ViewBag.ActiveItem = "List";
+    ViewBag.PageNumber = Model.Series.PageNumber;
+}
+<div class="container-fluid" style="margin: 10px;">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li class="@(Model.Bag.CompactMode ? "active" : null)"><a href="@Url.Action("Index", Model.Bag.ChangeValue(x=> x.CompactMode = !Model.Bag.CompactMode))">Compact Mode</a></li>
+                <li class="@(Model.Bag.EditMode ? "active" : null)"><a href="@Url.Action("Index", Model.Bag.ChangeValue(x => x.EditMode = !Model.Bag.EditMode))">Edit Mode</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Columns <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        @for (int i = 1; i <= 6; i++)
+                        {
+                            <li class="@(Model.Bag.Columns == i ? "active" : null)">
+                                <a href="@Url.Action("Index", Model.Bag.ChangeValue(x => x.Columns = i))">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Items Per Page <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        @{
+                            var multiplier = 50;
+                        }
+                        @for (int i = 1; i <= 20; i++)
+                        {
+                            <li class="@(Model.Bag.Columns == i * multiplier ? "active" : null)">
+                                <a href="@Url.Action("Index", Model.Bag.ChangeValue(x => x.ItemsPerPage = i * multiplier))">@(i * multiplier)</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-left" method="get" action="@Url.Action("Index")">
+                @Html.Hidden("EditMode", Model.Bag.EditMode)
+                @Html.Hidden("Columns", Model.Bag.Columns)
+                @Html.Hidden("Accending", Model.Bag.Accending)
+                @Html.Hidden("CompactMode", Model.Bag.CompactMode)
+                @Html.Hidden("ItemsPerPage", Model.Bag.ItemsPerPage)
+                @Html.Hidden("ShowShortDesc", Model.Bag.ShowShortDesc)
+                @Html.Hidden("Page", Model.Bag.Page)
+                @Html.Hidden("OrderBy", Model.Bag.OrderBy)
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Filter" value="@Model.Bag.Filter" name="Filter" />
+                    <div class="input-group-btn">
+                        <input type="submit" class="form-control btn btn-primary" value="Filter" />
+                    </div>
+                </div>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="btn-success"><a href="@Url.Action("Create")">Create New</a></li>
+            </ul>
+
+
+            
+        </div>
+    </nav>
+</div>
+<div class="row">
+    @{
+        var colItems = new List<Serie>[Model.Bag.Columns];
+        var itemsPerCol = (int) Math.Ceiling(Model.Series.Count / (float)Model.Bag.Columns);
+        var count = 0;
+        var colCount = 0;
+        for (int i = 0; i < Model.Series.Count; i++)
+        {
+            if (colItems[colCount] == null)
+            {
+                colItems[colCount] = new List<Serie>();
+            }
+            colItems[colCount].Add(Model.Series[i]);
+            count++;
+            if (count >= itemsPerCol)
+            {
+                colCount++;
+                count = 0;
+            }
+        }
+
+        foreach (var page in colItems)
+        {
+            <div class="col-lg-@(12 / Model.Bag.Columns)">
+                <table class="table table-striped" style="color: black; background-color: white;">
+                    @{
+                        Html.RenderPartial("Partials/TableContentPartial", new Tuple<IEnumerable<Serie>, SerieIndexBag>(page, Model.Bag));
+                    }
+                </table>
+            </div>
+        }
+    }
+</div>
+<div class="container-fluid" style="text-align: center;">
+    <div class="center-block">
+        Showing Page @Model.Series.PageNumber of @Model.Series.TotalItemCount items (@Model.Series.PageSize items per page)
+        <br/>
+        <nav>
+            <div class="center-block">
+                @Html.PagedListPager(Model.Series, pageNum => @Url.Action("Index", Model.Bag.ChangeValue(x=> x.Page = pageNum)))
+            </div>
+        </nav>
+    </div>
+</div>
+

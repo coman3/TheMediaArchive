@@ -1,0 +1,109 @@
+﻿@model Coman3.Models.Serie
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Serie</h4>
+        <hr/>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ShortDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ShortDescription, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ShortDescription, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LongDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LongDescription, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LongDescription, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ImageUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ImageUrl, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ImageUrl, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Seasons, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="container-fluid" style="padding: 5px;">
+                    <a href="@Url.Action("Create", "Seasons", new { id = Model.Id })" class="btn btn-success pull-right">Add Season</a>
+                </div>
+                <div class="treeview" id="seasonTree"></div>
+            </div>
+        </div>
+        
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default"/>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section scripts
+{
+    <script src="~/Scripts/bootstrapTreeView.js"></script>
+    <script>
+        var data = [@foreach (var season in Model.Seasons)
+                    {
+                        @Html.Raw("{")
+                        @Html.Raw($"text: \"{season.Name}</a> " +
+                                  "<div class='pull-right'>" +
+                                  $"{season.Episodes.Count} Episode(s) - " +
+                                  $"<a href='{Url.Action("Edit", "Seasons", new { id = season.Id })}'>Edit</a>" +
+                                  " | " +
+                                  $"<a href='{Url.Action("Delete", "Seasons", new { id = season.Id })}'>Delete</a>" +
+                                  $"<a href='{Url.Action("Create", "Episodes", new { id = season.Id })}' class='btn btn-xs btn-info' style='margin-left:10px;'>Add Episode</a>" +
+                                  "</div>\", ")
+                        @Html.Raw($"href: '{Url.Action("Details", "Seasons", new { id = season.Id })}', ")
+                        @Html.Raw(season.Episodes.Count > 0 ? "" : "state: { disabled: true },")
+                        @Html.Raw("selectable: false,")
+                        @Html.Raw("nodes: [")
+                        foreach (var episode in season.Episodes)
+                        {
+                            @Html.Raw("{")
+                            @Html.Raw($"text: \"{episode.Name}</a> " +
+                                      "<div class='pull-right'>" +
+                                      $"<a href='{Url.Action("Edit", "Episodes", new { id = episode.Id })}'>Edit</a>" +
+                                      " | " +
+                                      $"<a href='{Url.Action("Delete", "Episodes", new { id = episode.Id })}'>Delete</a>" +
+                                      $"</div>\", ")
+                            @Html.Raw($"href: '{Url.Action("Details", "Episodes", new { id = episode.Id })}', ")
+                            @Html.Raw("selectable: false,")
+                            @Html.Raw("}, ")
+                        }
+                        @Html.Raw("]")
+                        @Html.Raw("}, ")
+                    }];
+        $(function() {
+            $('#seasonTree').treeview({
+                data: data,
+                enableLinks: true,
+                color: 'black'
+            });
+            $('#seasonTree').treeview('collapseAll', { silent: true });
+        });
+    </script>
+}
