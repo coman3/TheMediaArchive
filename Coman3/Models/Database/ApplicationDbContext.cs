@@ -10,7 +10,7 @@ namespace Coman3.Models.Database
         public DbSet<Episode> Episodes { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Genre> Genres { get; set; }
-
+        public DbSet<Favourite> Favourites { get; set; }
         public ApplicationDbContext() : base("DefaultConnection", false)
         {
             

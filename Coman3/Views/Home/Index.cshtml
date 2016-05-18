@@ -1,15 +1,32 @@
-﻿@model List<Coman3.Models.Serie>
+﻿@using Coman3.Models
+@model List<Coman3.Models.Serie>
 @{
     ViewBag.Title = "Home Page";
     ViewBag.ActiveItem = "Home";
 }
 <div class="top-container">
-    <div style="font-family: RedMoonRising; font-size: 120px; width: 100%; text-align: center;">
+    <div style="font-family: HACKED; font-size: 120px; width: 100%; text-align: center;">
         Tv Archive
     </div>
-    <form class="form-group" action="@Url.Action("Search", "Series")" method="get">
+    <form class="form-group" action="@Url.Action("Index", "Series")" method="get">
+        @{
+            var bag = new SerieIndexBag
+            {
+                CompactMode = true,
+                ShowShortDesc = true,
+            };
+            bag.Validate();
+        }
+        @Html.Hidden("EditMode", bag.EditMode)
+        @Html.Hidden("Columns", bag.Columns)
+        @Html.Hidden("Accending", bag.Accending)
+        @Html.Hidden("CompactMode", bag.CompactMode)
+        @Html.Hidden("ItemsPerPage", bag.ItemsPerPage)
+        @Html.Hidden("ShowShortDesc", bag.ShowShortDesc)
+        @Html.Hidden("Page", bag.Page)
+        @Html.Hidden("OrderBy", bag.OrderBy)
         <div class="input-group automargin" style="max-width: 800px; padding: 10px;">
-            <input class="form-control" type="search" id="search" name="q" placeholder="Search"/>
+            <input class="form-control" type="search" id="search" name="filter" placeholder="Search"/>
             <div class="input-group-btn">
                 <input type="submit" class="form-control btn btn-info" value="Search"/>
             </div>
@@ -45,7 +62,7 @@
             select: function (event, ui) {
                 window.location.href = "/Seires/Details/" + ui.item.Id;
                 return true;
-            },
+            }
         });
         autoComplete.autocomplete("instance")._renderItem = function (ul, item) {
             return $("<li>")

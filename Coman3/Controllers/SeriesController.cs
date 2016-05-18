@@ -80,6 +80,11 @@ namespace Coman3.Controllers
                 return s.Episodes.Count;
             });
         }
+        [Authorize]
+        public async Task<ActionResult> Favourites()
+        {
+            return View();
+        }
 
         // GET: Series/Details/5
         public async Task<ActionResult> Details(Guid? id)

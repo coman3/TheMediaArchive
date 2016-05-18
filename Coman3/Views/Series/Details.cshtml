@@ -1,30 +1,156 @@
 ﻿@model Coman3.Models.Serie
-<!-- Tab panes -->
-<div class="tab-content">
-    <div role="tabpanel" class="tab-pane active debug-border" id="home">
-        <div class="container-fluid" style="height: 500px; background: pink;">
-            
-        </div>     
-    </div>
-    <div role="tabpanel" class="tab-pane" id="profile">..profile.</div>
-    <div role="tabpanel" class="tab-pane" id="messages">..messages.</div>
-    <div role="tabpanel" class="tab-pane" id="settings">..settings.</div>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-    <ul class="nav nav-tabs" id="tabLinkContainer" role="tablist">
-        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-        <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
-        <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
-    </ul>
+<div style="border: #121212 solid 1px;">
+    <div class="details-header">
+        <div style="position: relative; display: block; height: 100%; width: 100%;">
+            <div class="pull-bottom-left">
+                <div class="row title">
+
+                    <div class="col-lg-3"><img style="border: 1px solid #121212" class="img-responsive" src="~/Content/Images/image.jpg"/>
+                    </div>
+                    <div class="col-lg-9" style="padding-left: 20px;">
+                        <h1>@Model.Name</h1>
+                        <p>@Model.ShortDescription</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav" role="tablist">
+                    <li role="presentation" class="active"><a href="#outline" aria-controls="outline" role="tab" data-toggle="tab">Outline</a></li>
+                    <li role="presentation"><a href="#seasons" aria-controls="seasons" role="tab" data-toggle="tab">Seasons</a></li>
+                    <li role="presentation"><a href="#gallery" aria-controls="gallery" role="tab" data-toggle="tab">Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="btn-success"><a href="@Url.Action("Create")">Create New</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane" id="outline">
+                <div class="row">
+                    <div class="col-md-6 ">
+                        <h2>Description</h2>
+                        <p>@Model.LongDescription <br/>Finished her are its honoured drawings nor. Pretty see mutual thrown all not edward ten. Particular an boisterous up he reasonably frequently. Several any had enjoyed shewing studied two. Up intention remainder sportsmen behaviour ye happiness. Few again any alone style added abode ask. Nay projecting unpleasing boisterous eat discovered solicitude. Own six moments produce elderly pasture far arrival. Hold our year they ten upon. Gentleman contained so intention sweetness in on resolving.
+
+Same an quit most an. Admitting an mr disposing sportsmen. Tried on cause no spoil arise plate. Longer ladies valley get esteem use led six. Middletons resolution advantages expression themselves partiality so me at. West none hope if sing oh sent tell is.
+
+Led ask possible mistress relation elegance eat likewise debating. By message or am nothing amongst chiefly address. The its enable direct men depend highly. Ham windows sixteen who inquiry fortune demands. Is be upon sang fond must shew. Really boy law county she unable her sister. Feet you off its like like six. Among sex are leave law built now. In built table in an rapid blush. Merits behind on afraid or warmly.
+
+Sex and neglected principle ask rapturous consulted. Object remark lively all did feebly excuse our wooded. Old her object chatty regard vulgar missed. Speaking throwing breeding betrayed children my to. Me marianne no he horrible produced ye. Sufficient unpleasing an insensible motionless if introduced ye. Now give nor both come near many late.
+
+Now residence dashwoods she excellent you. Shade being under his bed her. Much read on as draw. Blessing for ignorant exercise any yourself unpacked. Pleasant horrible but confined day end marriage. Eagerness furniture set preserved far recommend. Did even but nor are most gave hope. Secure active living depend son repair day ladies now.
+
+Departure so attention pronounce satisfied daughters am. But shy tedious pressed studied opinion entered windows off. Advantage dependent suspicion convinced provision him yet. Timed balls match at by rooms we. Fat not boy neat left had with past here call. Court nay merit few nor party learn. Why our year her eyes know even how. Mr immediate remaining conveying allowance do or.
+
+Death weeks early had their and folly timed put. Hearted forbade on an village ye in fifteen. Age attended betrayed her man raptures laughter. Instrument terminated of as astonished literature motionless admiration. The affection are determine how performed intention discourse but. On merits on so valley indeed assure of. Has add particular boisterous uncommonly are. Early wrong as so manor match. Him necessary shameless discovery consulted one but.
+
+Consulted he eagerness unfeeling deficient existence of. Calling nothing end fertile for venture way boy. Esteem spirit temper too say adieus who direct esteem. It esteems luckily mr or picture placing drawing no. Apartments frequently or motionless on reasonable projecting expression. Way mrs end gave tall walk fact bed.
+
+One advanced diverted domestic sex repeated bringing you old. Possible procured her trifling laughter thoughts property she met way. Companions shy had solicitude favourable own. Which could saw guest man now heard but. Lasted my coming uneasy marked so should. Gravity letters it amongst herself dearest an windows by. Wooded ladies she basket season age her uneasy saw. Discourse unwilling am no described dejection incommode no listening of. Before nature his parish boy.
+
+Letter wooded direct two men indeed income sister. Impression up admiration he by partiality is. Instantly immediate his saw one day perceived. Old blushes respect but offices hearted minutes effects. Written parties winding oh as in without on started. Residence gentleman yet preserved few convinced. Coming regret simple longer little am sister on. Do danger in to adieus ladies houses oh eldest. Gone pure late gay ham. They sigh were not find are rent.
+
 </p>
+                    </div>
+                    <div class="col-md-3" >
+                        <h2>User Comments</h2>
+                        <div style="color: black;">
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="pull-right">
+                                            <a href="@Url.Action("Report", "Comments", new { id = "Blank" })" title="Report">
+                                                <span class="glyphicon glyphicon-flag"></span>
+                                            </a>
+                                        </div>
+                                        Message Of Comment
+                                        <br/>
+                                        adasd asd asd a sd
+
+                                    </div>
+                                    <div class="panel-footer" style="text-align: right;">
+                                        <span class="pull-left">coman3</span>
+                                        @DateTime.Now.ToString("F")
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <h2>Infomation</h2>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <table class="table table-striped" style="color: black;">
+                                    <tr><td>Date Published</td><td>@DateTime.Now.ToString("F")</td></tr>
+                                    <tr><td>Date Finished</td><td>@DateTime.Now.ToString("F")</td></tr>
+                                    <tr><td>Next Episode</td><td>@DateTime.Now.ToString("F")</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="seasons">
+                <div class="treeview" id="seasonTree"></div>
+            </div>
+            <div role="tabpanel" class="tab-pane in active" id="gallery">
+                <div id="freewall" class="free-wall"></div>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts{
+<script src="~/Scripts/bootstrapTreeView.js"></script>
     <script>
-        $('#tabLinkContainer a').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        })
-    </script>
+        var data = [@foreach (var season in Model.Seasons)
+                    {
+                        @Html.Raw("{")
+                        @Html.Raw($"text: \"{season.Name}</a> " +
+                                  "<div class='pull-right'>" +
+                                  $"{season.Episodes.Count} Episode(s) - " +
+                                  $"<a href='{Url.Action("Edit", "Seasons", new { id = season.Id })}'>Edit</a>" +
+                                  " | " +
+                                  $"<a href='{Url.Action("Delete", "Seasons", new { id = season.Id })}'>Delete</a>" +
+                                  $"<a href='{Url.Action("Create", "Episodes", new { id = season.Id })}' class='btn btn-xs btn-info' style='margin-left:10px;'>Add Episode</a>" +
+                                  "</div>\", ")
+                        @Html.Raw($"href: '{Url.Action("Details", "Seasons", new { id = season.Id })}', ")
+                        @Html.Raw(season.Episodes.Count > 0 ? "" : "state: { disabled: true },")
+                        @Html.Raw("selectable: false,")
+                        @Html.Raw("nodes: [")
+                        foreach (var episode in season.Episodes)
+                        {
+                            @Html.Raw("{")
+                            @Html.Raw($"text: \"{episode.Name}</a> " +
+                                      "<div class='pull-right'>" +
+                                      $"<a href='{Url.Action("Edit", "Episodes", new { id = episode.Id })}'>Edit</a>" +
+                                      " | " +
+                                      $"<a href='{Url.Action("Delete", "Episodes", new { id = episode.Id })}'>Delete</a>" +
+                                      $"</div>\", ")
+                            @Html.Raw($"href: '{Url.Action("Details", "Episodes", new { id = episode.Id })}', ")
+                            @Html.Raw("selectable: false,")
+                            @Html.Raw("}, ")
+                        }
+                        @Html.Raw("]")
+                        @Html.Raw("}, ")
+                    }];
+        $(function() {
+            $('#seasonTree').treeview({
+                data: data,
+                enableLinks: true,
+                color: 'black'
+            });
+            $('#seasonTree').treeview('collapseAll', { silent: true });
+            console.log("Test");
+            $.ajax({
+                source: "/Api/Gallery/@Model.Id?page=1",
+                accepts: "application/json",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+        });
+</script>
 }
