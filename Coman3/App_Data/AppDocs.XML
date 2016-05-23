@@ -481,6 +481,13 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
+        <member name="M:Coman3.Controllers.Api.SerieController.Get(System.String)">
+            <summary>
+            Get a list of (Max) 20 items that relate to the "search" (id) query. 
+            </summary>
+            <param name="id">The Query that you wish to search, this query can only contain the name of the serie, from the start.</param>
+            <returns>A List of "Bag.ItemsPerPage" <see cref="T:Coman3.Models.Serie"/>'s, with all data acociated.</returns>
+        </member>
         <member name="M:Coman3.Controllers.Api.SerieController.Get(Coman3.Models.SerieIndexBag)">
             <summary>
             Get A Paged List of <see cref="T:Coman3.Models.Serie"/>'s with all infomation about the serie, seasons and episodes

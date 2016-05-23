@@ -41,13 +41,13 @@ namespace Coman3.Helpers
                     break;
                 case SortOption.SeasonCount:
                     series = bag.Accending
-                        ? series.OrderByDescending(x => x.Seasons.Count) //TODO
-                        : series.OrderBy(x => x.Seasons.Count);
+                        ? series.OrderByDescending(x => x.SeasonCount)
+                        : series.OrderBy(x => x.SeasonCount);
                     break;
                 case SortOption.EpisodeCount:
                     series = bag.Accending
-                        ? series.OrderByDescending(x => x.Seasons.Sum(e => e.Episodes.Count))
-                        : series.OrderBy(x => x.Seasons.Sum(e => e.Episodes.Count));
+                        ? series.OrderByDescending(x => x.EpisodeCount)
+                        : series.OrderBy(x => x.EpisodeCount);
                     break;
                 case SortOption.DatePublished:
                     break; //TODO

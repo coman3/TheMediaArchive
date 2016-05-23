@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Coman3.Models;
 using Newtonsoft.Json;
+using WebGrease.Css.Extensions;
 
 namespace Coman3.Migrations
 {
@@ -23,40 +24,37 @@ namespace Coman3.Migrations
 
         protected override void Seed(Coman3.Models.Database.ApplicationDbContext context)
         {
-            context.Episodes.RemoveRange(context.Episodes);
-            context.Seasons.RemoveRange(context.Seasons);
-            context.Series.RemoveRange(context.Series);
-            context.SaveChanges();
             for (int i = 0; i < 500; i++)
             {
-                var serie = new Serie("Title " + i)
+                var serie = new Serie("Serie " + i)
                 {
-                    ShortDescription = "Short Description for Title " + i + ". It is a great show!",
+                    Seasons = new List<Season>()
                 };
-                var seasons = new List<Season>();
-                for (int s = 0; s < 9; s++)
+                for (int s = 0; s < 4; s++)
                 {
-                    var season = new Season
+                    var season = new Season()
                     {
                         Id = Guid.NewGuid(),
-                        Name = "Season " + s,
-                        Number = s,
-                        Episodes = new List<Episode>()
+                        Name = "Season " + (s + 1),
+                        Number = s + 1,
+                        Episodes = new List<Episode>(),
+                        Serie = serie,
                     };
-                    for (int e = 0; e < 26; e++)
+                    for (int e = 0; e < 10; e++)
                     {
                         season.Episodes.Add(new Episode
                         {
                             Id = Guid.NewGuid(),
-                            Name = "Episode " + e,
                             Season = season,
+                            Name = "Episode " + e,
                         });
+                        serie.EpisodeCount++;
                     }
-                    seasons.Add(season);
+                    serie.SeasonCount++;
+                    serie.Seasons.Add(season);
                 }
-                serie.Seasons = seasons;
                 context.Series.Add(serie);
-            } 
+            }
             context.SaveChanges();
         }
     }

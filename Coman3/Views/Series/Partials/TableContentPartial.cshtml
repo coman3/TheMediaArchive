@@ -112,7 +112,7 @@ else
                     }
                     else
                     {
-                        @item.Seasons.Count
+                        @item.SeasonCount
                     }
                 </td>
                 <td>
@@ -122,7 +122,7 @@ else
                     }
                     else
                     {
-                        @item.Seasons.Sum(x => x.Episodes?.Count ?? 0)
+                        @item.EpisodeCount
                     }
                 </td>
                 <td>

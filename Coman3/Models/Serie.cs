@@ -23,6 +23,10 @@ namespace Coman3.Models
         public string Genres { get; set; }
         [DataMember]
         public string Tags { get; set; }
+        [DataMember]
+        public int SeasonCount { get; set; }
+        [DataMember]
+        public int EpisodeCount { get; set; }
 
         public Serie()
         {

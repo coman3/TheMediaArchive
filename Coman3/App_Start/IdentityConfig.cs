@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 using Coman3.Models.Database;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -16,6 +17,12 @@ namespace Coman3
     {
         public Task SendAsync(IdentityMessage message)
         {
+            WebMail.SmtpServer = "mail.blockybox.com";
+            WebMail.Password = "TestPassword1";
+            WebMail.UserName = "Test@Blockybox.com";
+            WebMail.SmtpPort = 25;
+            WebMail.From = "Test@Blockybox.com";
+            WebMail.Send(message.Destination, message.Subject, message.Body);
             // Plug in your email service here to send an email.
             return Task.FromResult(0);
         }
@@ -45,7 +52,7 @@ namespace Coman3
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                RequireUniqueEmail = true,
             };
 
             // Configure validation logic for passwords
@@ -75,7 +82,9 @@ namespace Coman3
                 BodyFormat = "Your security code is {0}"
             });
             manager.EmailService = new EmailService();
+            
             manager.SmsService = new SmsService();
+            
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {

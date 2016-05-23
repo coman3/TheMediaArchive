@@ -16,21 +16,6 @@ namespace Coman3.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Seasons/Details/5
-        public async Task<ActionResult> Details(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Season season = await db.Seasons.FindAsync(id);
-            if (season == null)
-            {
-                return HttpNotFound();
-            }
-            return View(season);
-        }
-
         // GET: Seasons/Create
         public async Task<ActionResult> Create(Guid? id)
         {
@@ -63,6 +48,7 @@ namespace Coman3.Controllers
                 var series = await db.Series.FindAsync(season.SeriesId);
                 if (series == null) return HttpNotFound();
                 if(series.Seasons == null) series.Seasons = new List<Season>();
+                series.SeasonCount += 1;
                 series.Seasons.Add(seasonItem);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Edit", "Series", new { id = series.Id });
@@ -97,7 +83,8 @@ namespace Coman3.Controllers
             {
                 db.Entry(season).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Details", "Seasons", new { id = season.Id });
+                
+                return RedirectToAction("Edit", "Series", new { id = season.Serie.Id });
             }
             return View(season);
         }

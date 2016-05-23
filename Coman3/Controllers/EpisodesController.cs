@@ -62,7 +62,13 @@ namespace Coman3.Controllers
                 var season = await db.Seasons.FindAsync(episode.SeasonId);
                 if (season == null) return HttpNotFound();
                 if (season.Episodes == null) season.Episodes = new List<Episode>();
+
+                var series = await db.Series.FindAsync(season.Serie.Id);
+                if (series == null) return HttpNotFound();
+                series.EpisodeCount += 1;
+
                 season.Episodes.Add(episodeItem);
+
                 await db.SaveChangesAsync();
                 return RedirectToAction("Edit", "Series", new { id = season.Serie.Id });
             }

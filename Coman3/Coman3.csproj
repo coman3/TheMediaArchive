@@ -289,6 +289,10 @@
     <Compile Include="Migrations\201605140535582_AddFavs.Designer.cs">
       <DependentUpon>201605140535582_AddFavs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605230056544_AddSeasonEpisodeCountToSerie.cs" />
+    <Compile Include="Migrations\201605230056544_AddSeasonEpisodeCountToSerie.Designer.cs">
+      <DependentUpon>201605230056544_AddSeasonEpisodeCountToSerie.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account\AccountViewModels.cs" />
     <Compile Include="Models\Account\ManageViewModels.cs" />
@@ -460,6 +464,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605140535582_AddFavs.resx">
       <DependentUpon>201605140535582_AddFavs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605230056544_AddSeasonEpisodeCountToSerie.resx">
+      <DependentUpon>201605230056544_AddSeasonEpisodeCountToSerie.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
