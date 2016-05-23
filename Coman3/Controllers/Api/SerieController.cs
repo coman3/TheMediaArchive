@@ -4,45 +4,28 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Mvc;
+using Coman3.Helpers;
 using Coman3.Models;
 using Coman3.Models.Api;
 using Coman3.Models.Database;
+using PagedList;
 
 namespace Coman3.Controllers.Api
 {
     public class SerieController : ApiController
     {
-        public ApplicationDbContext DbContext = ApplicationDbContext.Create();
+        private readonly ApplicationDbContext _dbContext = ApplicationDbContext.Create();
+        private readonly SerieHelper _serieHelper;
 
-        public List<SerieResult> Get(string id)
+        public SerieController()
         {
-            var lowId = id.ToLower();
-            
-            var result =
-                DbContext.Series.Where(
-                    x =>
-                        x.Name.ToLower().StartsWith(lowId))
-                    .ToList()
-                    .Select(x => new SerieResult(x, GetGenres(x)))
-                    .ToList();
-            if (result.Count > 0) return result;
-
-
-            return
-                DbContext.Series.Where(
-                    x => x.Name.ToLower().Contains(lowId) || x.ShortDescription.ToLower().Contains(lowId))
-                    .ToList()
-                    .Select(x => new SerieResult(x, GetGenres(x)))
-                    .ToList();
+            _serieHelper = new SerieHelper(_dbContext);
         }
-
-        private List<Genre> GetGenres(Serie serie)
+        
+        public List<Serie> Get([FromUri] SerieIndexBag bag)
         {
-            return serie.Genres?.Split('|').Select(x => DbContext.Genres.FirstOrDefault(g=> g.Name == x)).ToList();
-        }
-        private List<Genre> GetTags(Serie serie)
-        {
-            return serie.Genres?.Split('|').Select(x => DbContext.Genres.FirstOrDefault(g => g.Name == x)).ToList();
+            return _serieHelper.GetSeriesFromQuery(bag).ToPagedList(bag.Page, bag.ItemsPerPage).ToList();
         }
 
         public void Post()

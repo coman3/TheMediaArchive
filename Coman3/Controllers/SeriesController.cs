@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Coman3.Controllers.Api;
+using Coman3.Helpers;
 using Coman3.Models;
 using Coman3.Models.Database;
 using PagedList;
@@ -16,72 +18,25 @@ namespace Coman3.Controllers
 {
     public class SeriesController : Controller
     {
-        private ApplicationDbContext DbContext = new ApplicationDbContext();
-        // GET: Series
-        public async Task<ActionResult> Index(SerieIndexBag bag)
-        {
-            bag.Validate();
-            if (bag.EditMode == false)
-            {
-                bag.OrderBy = SortOption.Name;
-            }
-            IQueryable<Serie> series;
-            if (bag.Filter.Length < 3)
-            {
-                series = DbContext.Series;
-            }
-            else
-            {
-                series = DbContext.Series.Where(x => x.Name.ToLower().StartsWith(bag.Filter.ToLower()));
-            }
-            if (series.Count() < bag.ItemsPerPage * bag.Page)
-                bag.Page = 1;
-            switch (bag.OrderBy)
-            {
-                case SortOption.Name:
-                    series = bag.Accending ? series.OrderBy(x => x.Name) : series.OrderByDescending(x => x.Name);
-                    break;
-                case SortOption.SeasonCount:
-                    series = bag.Accending
-                        ? series.OrderByDescending(x => GetSeasonCount(x)) //TODO
-                        : series.OrderBy(x => GetSeasonCount(x));
-                    break;
-                case SortOption.EpisodeCount:
-                    series = bag.Accending
-                        ? series.OrderByDescending(x => GetEpisodeCount(x))
-                        : series.OrderBy(x => GetEpisodeCount(x));
-                    break;
-                case SortOption.DatePublished:
-                    break; //TODO
-                case SortOption.LastEpisodeDate:
-                    break; //TODO: sort by most recent episode
-                case SortOption.DateAdded:
-                    break; //TODO: Sort by date added to the database
-                case SortOption.MostViews:
-                    break; //TODO
-                case SortOption.HighestRating:
-                    break; //TODO
+        private readonly ApplicationDbContext _dbContext = new ApplicationDbContext();
+        private readonly SerieHelper _serieHelper;
 
-            }
-            
+        public SeriesController()
+        {
+            _serieHelper = new SerieHelper(_dbContext); 
+        }
+
+        // GET: Series
+        public ActionResult Index(SerieIndexBag bag)
+        {
+            IQueryable<Serie> series = _serieHelper.GetSeriesFromQuery(bag);
+
             return View(new SerieIndexViewModel(series.ToPagedList(bag.Page, bag.ItemsPerPage), bag));
         }
-        private int GetSeasonCount(Serie serie)
-        {
-            if (serie.Seasons == null) return 0;
-            return serie.Seasons.Count;
-        }
-        private int GetEpisodeCount(Serie serie)
-        {
-            if (serie.Seasons == null) return 0;
-            return serie.Seasons.Sum(s =>
-            {
-                if (s.Episodes == null) return 0;
-                return s.Episodes.Count;
-            });
-        }
+
+
         [Authorize]
-        public async Task<ActionResult> Favourites()
+        public ActionResult Favourites()
         {
             return View();
         }
@@ -93,7 +48,7 @@ namespace Coman3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Serie serie = await DbContext.Series.FindAsync(id);
+            Serie serie = await _dbContext.Series.FindAsync(id);
             if (serie == null)
             {
                 return HttpNotFound();
@@ -126,8 +81,8 @@ namespace Coman3.Controllers
                     ImageUrl = serie.ImageUrl ?? Url.Content("~/Content/Images/Image.jpg"),
                     Name = serie.Name
                 };
-                var dbTags = DbContext.Tags.ToList();
-                var dbGenres = DbContext.Genres.ToList();
+                var dbTags = _dbContext.Tags.ToList();
+                var dbGenres = _dbContext.Genres.ToList();
                 
                 if (serie.Tags != null)
                 {
@@ -135,7 +90,7 @@ namespace Coman3.Controllers
                     tags.ForEach(x =>
                     {
                         var foundTag = dbTags.FirstOrDefault(c => c.Name == x);
-                        if (foundTag == null) DbContext.Tags.Add(new Tag { Id = Guid.NewGuid(), Name = x });
+                        if (foundTag == null) _dbContext.Tags.Add(new Tag { Id = Guid.NewGuid(), Name = x });
                     });
                 }
                 if (serie.Genres != null)
@@ -144,11 +99,11 @@ namespace Coman3.Controllers
                     genres.ForEach(x =>
                     {
                         var foundGenre = dbGenres.FirstOrDefault(c => c.Name == x);
-                        if (foundGenre == null) DbContext.Genres.Add(new Genre { Id = Guid.NewGuid(), Name = x });
+                        if (foundGenre == null) _dbContext.Genres.Add(new Genre { Id = Guid.NewGuid(), Name = x });
                     });
                 }
-                DbContext.Series.Add(serieItem);
-                await DbContext.SaveChangesAsync();
+                _dbContext.Series.Add(serieItem);
+                await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -163,7 +118,7 @@ namespace Coman3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Serie serie = await DbContext.Series.FindAsync(id);
+            Serie serie = await _dbContext.Series.FindAsync(id);
             if (serie == null)
             {
                 return HttpNotFound();
@@ -181,8 +136,8 @@ namespace Coman3.Controllers
         {
             if (ModelState.IsValid)
             {
-                DbContext.Entry(serie).State = EntityState.Modified;
-                await DbContext.SaveChangesAsync();
+                _dbContext.Entry(serie).State = EntityState.Modified;
+                await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(serie);
@@ -196,7 +151,7 @@ namespace Coman3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Serie serie = await DbContext.Series.FindAsync(id);
+            Serie serie = await _dbContext.Series.FindAsync(id);
             if (serie == null)
             {
                 return HttpNotFound();
@@ -210,9 +165,9 @@ namespace Coman3.Controllers
         [Authorize]
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
-            Serie serie = await DbContext.Series.FindAsync(id);
-            DbContext.Series.Remove(serie);
-            await DbContext.SaveChangesAsync();
+            Serie serie = await _dbContext.Series.FindAsync(id);
+            _dbContext.Series.Remove(serie);
+            await _dbContext.SaveChangesAsync();
             return RedirectToAction("Index");
         }
         [Authorize]
@@ -235,7 +190,7 @@ namespace Coman3.Controllers
         {
             if (disposing)
             {
-                DbContext.Dispose();
+                _dbContext.Dispose();
             }
             base.Dispose(disposing);
         }

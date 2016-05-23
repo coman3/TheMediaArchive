@@ -120,6 +120,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -210,6 +211,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\SerieHelper.cs" />
     <Compile Include="Migrations\201605080637232_InitialCreate.cs" />
     <Compile Include="Migrations\201605080637232_InitialCreate.Designer.cs">
       <DependentUpon>201605080637232_InitialCreate.cs</DependentUpon>

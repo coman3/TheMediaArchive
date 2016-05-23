@@ -3,17 +3,25 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Configuration;
+using System.Runtime.Serialization;
 using PagedList;
 
 namespace Coman3.Models
 {
+    [DataContract]
     public class Serie : ArchiveItem
     {
+        [DataMember]
         public string ShortDescription { get; set; }
+        [DataMember]
         public string LongDescription { get; set; }
+        [DataMember]
         public virtual List<Season> Seasons { get; set; }
+        [DataMember]
         public string ImageUrl { get; set; }
+        [DataMember]
         public string Genres { get; set; }
+        [DataMember]
         public string Tags { get; set; }
 
         public Serie()
